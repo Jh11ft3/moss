@@ -6,14 +6,14 @@
     <title>Furry们的交流平台 </title>
     <style>
         img{
-            width: 300px;
+            width: 350px;
             height: 400px;
         }
     </style>
 </head>
 
 <body>
-    <H1>Hi Furry</H1>
+    <H1>Hi Furry快来聊天吧 禁止盗图</H1>
 <img src="微信图片_20251005110023_1_8.jpg" alt="">
 <img src="微信图片_20251005110025_2_8.jpg" alt="">
 <img src="微信图片_20251005110026_3_8.jpg" alt="">
@@ -36,4 +36,150 @@
 <img src="微信图片_20251005133512_31_8.jpg" alt="">
     
 </body>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>毛毛交流区（支持发图）</title>
+    <style>
+        /* 核心：简化样式层级，无冗余代码，保证加载速度 */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Arial", "Microsoft YaHei", sans-serif; }
+        body { background: #f8f8f8; color: #333; line-height: 1.6; padding: 15px; max-width: 800px; margin: 0 auto; }
+        /* 登录面板 */
+        .login-box { background: #fff; padding: 22px; border-radius: 8px; box-shadow: 0 2px 3px rgba(0,0,0,0.08); margin-bottom: 18px; display: block; }
+        .login-box h3 { font-size: 18px; margin-bottom: 15px; color: #444; }
+        .login-box input { width: 100%; padding: 10px; border: 1px solid #e0e0e0; border-radius: 4px; margin: 8px 0; font-size: 16px; }
+        .login-box button { width: 100%; padding: 10px; background: #5cb85c; color: #fff; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        .login-box button:hover { background: #4cae4c; }
+        /* 评论区（默认隐藏） */
+        .comment-area { display: none; }
+        /* 评论输入区（含图片上传） */
+        .comment-input { background: #fff; padding: 18px; border-radius: 8px; box-shadow: 0 2px 3px rgba(0,0,0,0.08); margin-bottom: 18px; }
+        .comment-input textarea { width: 100%; padding: 10px; border: 1px solid #e0e0e0; border-radius: 4px; margin-bottom: 12px; resize: none; height: 90px; font-size: 15px; }
+        .img-upload { margin-bottom: 12px; font-size: 14px; color: #666; }
+        .img-upload input { display: none; }
+        .upload-btn { display: inline-block; padding: 6px 12px; background: #eee; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; margin-right: 10px; }
+        .img-preview { max-width: 120px; max-height: 120px; margin-top: 8px; border-radius: 4px; display: none; }
+        .comment-input .submit-btn { padding: 9px 20px; background: #5cb85c; color: #fff; border: none; border-radius: 4px; font-size: 15px; cursor: pointer; }
+        /* 评论列表 */
+        .comment-list { background: #fff; padding: 18px; border-radius: 8px; box-shadow: 0 2px 3px rgba(0,0,0,0.08); }
+        .comment-item { padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
+        .comment-item:last-child { border-bottom: none; }
+        .comment-header { margin-bottom: 8px; }
+        .comment-name { font-weight: 600; color: #5cb85c; font-size: 15px; }
+        .comment-time { font-size: 12px; color: #999; margin-left: 8px; }
+        .comment-content { font-size: 15px; margin-bottom: 8px; }
+        .comment-img { max-width: 100%; max-height: 300px; border-radius: 4px; }
+        /* 响应式适配手机 */
+        @media (max-width: 500px) {
+            body { padding: 10px; }
+            .login-box, .comment-input, .comment-list { padding: 15px; }
+            .comment-input textarea { height: 80px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 登录面板（初始显示） -->
+    <div class="login-box" id="loginBox">
+        <h3>毛毛登录</h3>
+        <input type="text" id="username" placeholder="请输入你的账户名" required>
+        <button onclick="login()">登录进入交流区</button>
+    </div>
 
+    <!-- 评论交流区（登录后显示，含图片上传） -->
+    <div class="comment-area" id="commentArea">
+        <div class="comment-input">
+            <textarea id="commentContent" placeholder="来说点什么吧~"></textarea>
+            <!-- 图片上传模块 -->
+            <div class="img-upload">
+                <label class="upload-btn" for="imgSelect">选择图片</label>
+                <input type="file" id="imgSelect" accept="image/jpg,image/jpeg,image/png" onchange="previewImg(this)">
+                <span id="imgTip">支持JPG/PNG格式</span>
+                < img class="img-preview" id="imgPreview" alt="预览图">
+            </div>
+            <button class="submit-btn" onclick="addComment()">发布评论</button>
+        </div>
+        <div class="comment-list" id="commentList"></div>
+    </div>
+
+    <script>
+        let currentUser = '';
+        // 评论数据含图片信息，从localStorage读取（刷新不丢失）
+        let comments = JSON.parse(localStorage.getItem('maomaoCommentsWithImg')) || [];
+
+        // 1. 登录功能：仅验证账户名非空，免密码
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            if (!username) { alert('请输入账户名再登录~'); return; }
+            currentUser = username;
+            // 切换显示状态
+            document.getElementById('loginBox').style.display = 'none';
+            document.getElementById('commentArea').style.display = 'block';
+            renderComments(); // 加载历史评论
+        }
+
+        // 2. 图片预览：选择后即时显示小图，不上传服务器（轻量）
+        function previewImg(input) {
+            const preview = document.getElementById('imgPreview');
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
+                reader.readAsDataURL(file); // 转base64暂存，无需后端
+            } else {
+                preview.src = ''; preview.style.display = 'none';
+            }
+        }
+
+        // 3. 发布评论（含文字+图片）
+        function addComment() {
+            const content = document.getElementById('commentContent').value.trim();
+            const preview = document.getElementById('imgPreview');
+            const imgSrc = preview.src || '';
+
+            // 至少有文字或图片才允许发布
+            if (!content && !imgSrc) { alert('请输入评论内容或选择图片~'); return; }
+
+            // 构造评论数据（含图片base64地址）
+            const newComment = {
+                username: currentUser,
+                content: content,
+                imgSrc: imgSrc,
+                time: new Date().toLocaleString() // 本地时间格式
+            };
+
+            // 保存数据并更新界面
+            comments.push(newComment);
+            localStorage.setItem('maomaoCommentsWithImg', JSON.stringify(comments));
+            // 清空输入框和预览图
+            document.getElementById('commentContent').value = '';
+            document.getElementById('imgSelect').value = '';
+            preview.src = ''; preview.style.display = 'none';
+            renderComments();
+        }
+
+        // 4. 渲染评论列表（含图片展示）
+        function renderComments() {
+            const list = document.getElementById('commentList');
+            list.innerHTML = '';
+            // 倒序显示（最新评论在顶部）
+            comments.reverse().forEach(comment => {
+                const item = document.createElement('div');
+                item.className = 'comment-item';
+                // 拼接评论HTML（含图片判断：有图则显示，无图则不渲染）
+                item.innerHTML = `
+                    <div class="comment-header">
+                        <span class="comment-name">${comment.username}</span>
+                        <span class="comment-time">${comment.time}</span>
+                    </div>
+                    <div class="comment-content">${comment.content}</div>
+                    ${comment.imgSrc ? `< img class="comment-img" src="${comment.imgSrc}" alt="评论图片">` : ''}
+                `;
+                list.appendChild(item);
+            });
+            comments.reverse(); // 恢复原数组顺序，方便新增
+        }
+    </script>
+</body>
+</html>
