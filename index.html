@@ -1,185 +1,283 @@
-<DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Furry们的交流平台 </title>
-    <style>
-        img{
-            width: 350px;
-            height: 400px;
-        }
-    </style>
-</head>
-
-<body>
-    <H1>Hi Furry快来聊天吧 禁止盗图</H1>
-<img src="微信图片_20251005110023_1_8.jpg" alt="">
-<img src="微信图片_20251005110025_2_8.jpg" alt="">
-<img src="微信图片_20251005110026_3_8.jpg" alt="">
-<img src="微信图片_20251005110029_4_8.jpg" alt="">
-<img src="微信图片_20251005110030_5_8.jpg" alt="">
-<img src="微信图片_20251005110032_6_8.jpg" alt="">
-<img src="微信图片_20251005114241_7_8.jpg" alt="">
-<img src="微信图片_20251005114249_8_8.jpg" alt="">
-<img src="微信图片_20251005114259_9_8.jpg" alt="">
-<img src="微信图片_20251005133403_20_8.jpg" alt="">
-<img src="微信图片_20251005133407_21_8.jpg" alt="">
-<img src="微信图片_20251005133409_22_8.jpg" alt="">
-<img src="微信图片_20251005133410_23_8.jpg" alt="">
-<img src="微信图片_20251005133412_24_8.jpg" alt="">
-<img src="微信图片_20251005133413_25_8.jpg" alt="">
-<img src="微信图片_20251005133506_27_8.jpg" alt="">
-<img src="微信图片_20251005133507_28_8.jpg" alt="">
-<img src="微信图片_20251005133506_27_8.jpg" alt="">
-<img src="微信图片_20251005133511_30_8.jpg" alt="">
-<img src="微信图片_20251005133512_31_8.jpg" alt="">
-    
-</body>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>毛毛交流区（支持发图）</title>
-    <style>
-        /* 核心：简化样式层级，无冗余代码，保证加载速度 */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Arial", "Microsoft YaHei", sans-serif; }
-        body { background: #f8f8f8; color: #333; line-height: 1.6; padding: 15px; max-width: 800px; margin: 0 auto; }
-        /* 登录面板 */
-        .login-box { background: #fff; padding: 22px; border-radius: 8px; box-shadow: 0 2px 3px rgba(0,0,0,0.08); margin-bottom: 18px; display: block; }
-        .login-box h3 { font-size: 18px; margin-bottom: 15px; color: #444; }
-        .login-box input { width: 100%; padding: 10px; border: 1px solid #e0e0e0; border-radius: 4px; margin: 8px 0; font-size: 16px; }
-        .login-box button { width: 100%; padding: 10px; background: #5cb85c; color: #fff; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
-        .login-box button:hover { background: #4cae4c; }
-        /* 评论区（默认隐藏） */
-        .comment-area { display: none; }
-        /* 评论输入区（含图片上传） */
-        .comment-input { background: #fff; padding: 18px; border-radius: 8px; box-shadow: 0 2px 3px rgba(0,0,0,0.08); margin-bottom: 18px; }
-        .comment-input textarea { width: 100%; padding: 10px; border: 1px solid #e0e0e0; border-radius: 4px; margin-bottom: 12px; resize: none; height: 90px; font-size: 15px; }
-        .img-upload { margin-bottom: 12px; font-size: 14px; color: #666; }
-        .img-upload input { display: none; }
-        .upload-btn { display: inline-block; padding: 6px 12px; background: #eee; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; margin-right: 10px; }
-        .img-preview { max-width: 120px; max-height: 120px; margin-top: 8px; border-radius: 4px; display: none; }
-        .comment-input .submit-btn { padding: 9px 20px; background: #5cb85c; color: #fff; border: none; border-radius: 4px; font-size: 15px; cursor: pointer; }
-        /* 评论列表 */
-        .comment-list { background: #fff; padding: 18px; border-radius: 8px; box-shadow: 0 2px 3px rgba(0,0,0,0.08); }
-        .comment-item { padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
-        .comment-item:last-child { border-bottom: none; }
-        .comment-header { margin-bottom: 8px; }
-        .comment-name { font-weight: 600; color: #5cb85c; font-size: 15px; }
-        .comment-time { font-size: 12px; color: #999; margin-left: 8px; }
-        .comment-content { font-size: 15px; margin-bottom: 8px; }
-        .comment-img { max-width: 100%; max-height: 300px; border-radius: 4px; }
-        /* 响应式适配手机 */
-        @media (max-width: 500px) {
-            body { padding: 10px; }
-            .login-box, .comment-input, .comment-list { padding: 15px; }
-            .comment-input textarea { height: 80px; }
+    <title>福瑞交流空间</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        // Tailwind配置：液态玻璃效果、圆角、颜色
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        fursuit: {
+                            primary: '#8B5CF6', // 主色调：紫蓝色（柔和科技感）
+                            secondary: '#EC4899', // 辅助色：粉色（活泼）
+                            light: '#F3F4F6', // 浅色背景
+                            dark: '#1F2937' // 深色文本
+                        }
+                    },
+                    borderRadius: {
+                        'xl': '1rem',
+                        '2xl': '1.5rem',
+                        '3xl': '2rem' // 超圆润边角
+                    },
+                    backdropBlur: {
+                        'xl': '20px' // 液态玻璃模糊效果
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            // 液态玻璃核心样式
+            .glass {
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+            }
+            // 输入框/按钮 hover 动画
+            .hover-scale {
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            .hover-scale:hover {
+                transform: scale(1.02);
+                box-shadow: 0 10px 40px rgba(31, 38, 135, 0.15);
+            }
+            // 消息气泡动画
+            .msg-appear {
+                animation: fadeIn 0.3s ease forwards;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
         }
     </style>
 </head>
-<body>
-    <!-- 登录面板（初始显示） -->
-    <div class="login-box" id="loginBox">
-        <h3>毛毛登录</h3>
-        <input type="text" id="username" placeholder="请输入你的账户名" required>
-        <button onclick="login()">登录进入交流区</button>
+<body class="bg-gradient-to-br from-fursuit-primary/10 to-fursuit-secondary/10 min-h-screen font-sans text-fursuit-dark">
+    <!-- 登录界面（默认显示） -->
+    <div id="login-screen" class="fixed inset-0 flex items-center justify-center z-50 transition-all duration-500">
+        <div class="glass w-[90%] max-w-md p-8 rounded-3xl flex flex-col items-center gap-6">
+            <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-fursuit-primary to-fursuit-secondary flex items-center justify-center">
+                <<i class="fa fa-paw text-white text-4xl"></</i>
+            </div>
+            <h1 class="text-2xl font-bold text-center">福瑞交流空间</h1>
+            <p class="text-sm text-gray-600 text-center">输入昵称即可登录，无需密码</p>
+            <input 
+                type="text" 
+                id="nickname-input" 
+                placeholder="请输入你的福瑞昵称" 
+                class="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-fursuit-primary/50 hover-scale"
+                maxlength="12"
+            >
+            <button 
+                id="login-btn" 
+                class="w-full bg-fursuit-primary text-white py-3 rounded-2xl font-medium hover-scale disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+                disabled
+            >
+                进入交流
+            </button>
+        </div>
     </div>
 
-    <!-- 评论交流区（登录后显示，含图片上传） -->
-    <div class="comment-area" id="commentArea">
-        <div class="comment-input">
-            <textarea id="commentContent" placeholder="来说点什么吧~"></textarea>
-            <!-- 图片上传模块 -->
-            <div class="img-upload">
-                <label class="upload-btn" for="imgSelect">选择图片</label>
-                <input type="file" id="imgSelect" accept="image/jpg,image/jpeg,image/png" onchange="previewImg(this)">
-                <span id="imgTip">支持JPG/PNG格式</span>
-                < img class="img-preview" id="imgPreview" alt="预览图">
+    <!-- 主聊天界面（默认隐藏） -->
+    <div id="chat-screen" class="hidden w-full max-w-4xl mx-auto p-4 pt-6 h-screen flex flex-col">
+        <!-- 顶部导航 -->
+        <header class="glass rounded-2xl p-4 mb-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-fursuit-primary to-fursuit-secondary flex items-center justify-center">
+                    <<i class="fa fa-paw text-white text-lg"></</i>
+                </div>
+                <h2 class="font-bold">福瑞交流空间</h2>
             </div>
-            <button class="submit-btn" onclick="addComment()">发布评论</button>
+            <div class="flex items-center gap-2">
+                <span id="current-user" class="text-sm font-medium"></span>
+                <button id="logout-btn" class="text-gray-500 hover:text-fursuit-secondary">
+                    <<i class="fa fa-sign-out"></</i>
+                </button>
+            </div>
+        </header>
+
+        <!-- 消息列表 -->
+        <div id="message-container" class="glass rounded-2xl p-4 flex-1 overflow-y-auto mb-4 gap-4 flex flex-col">
+            <!-- 系统消息（初始） -->
+            <div class="msg-appear self-center">
+                <div class="bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full">
+                    欢迎来到福瑞交流空间，愉快聊天吧~
+                </div>
+            </div>
         </div>
-        <div class="comment-list" id="commentList"></div>
+
+        <!-- 输入区域 -->
+        <div class="glass rounded-2xl p-4 flex items-center gap-3">
+            <!-- 图片选择按钮 -->
+            <label for="image-upload" class="text-fursuit-primary hover:text-fursuit-secondary cursor-pointer hover-scale p-2 rounded-full">
+                <<i class="fa fa-image text-lg"></</i>
+                <input id="image-upload" type="file" accept="image/jpeg,image/png,image/gif" class="hidden">
+            </label>
+            
+            <!-- 文字输入框 -->
+            <textarea 
+                id="message-input" 
+                placeholder="输入消息...（支持文字和图片）" 
+                class="flex-1 px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-fursuit-primary/50 resize-none min-h-[50px] max-h-[150px]"
+            ></textarea>
+            
+            <!-- 发送按钮 -->
+            <button 
+                id="send-btn" 
+                class="bg-fursuit-primary text-white p-3 rounded-2xl hover-scale disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                disabled
+            >
+                <<i class="fa fa-paper-plane"></</i>
+            </button>
+        </div>
     </div>
 
     <script>
-        let currentUser = '';
-        // 评论数据含图片信息，从localStorage读取（刷新不丢失）
-        let comments = JSON.parse(localStorage.getItem('maomaoCommentsWithImg')) || [];
+        // DOM元素获取
+        const loginScreen = document.getElementById('login-screen');
+        const chatScreen = document.getElementById('chat-screen');
+        const nicknameInput = document.getElementById('nickname-input');
+        const loginBtn = document.getElementById('login-btn');
+        const currentUser = document.getElementById('current-user');
+        const logoutBtn = document.getElementById('logout-btn');
+        const messageContainer = document.getElementById('message-container');
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const imageUpload = document.getElementById('image-upload');
 
-        // 1. 登录功能：仅验证账户名非空，免密码
-        function login() {
-            const username = document.getElementById('username').value.trim();
-            if (!username) { alert('请输入账户名再登录~'); return; }
-            currentUser = username;
-            // 切换显示状态
-            document.getElementById('loginBox').style.display = 'none';
-            document.getElementById('commentArea').style.display = 'block';
-            renderComments(); // 加载历史评论
-        }
+        // 登录功能
+        nicknameInput.addEventListener('input', () => {
+            // 昵称不为空则启用登录按钮
+            loginBtn.disabled = nicknameInput.value.trim() === '';
+        });
 
-        // 2. 图片预览：选择后即时显示小图，不上传服务器（轻量）
-        function previewImg(input) {
-            const preview = document.getElementById('imgPreview');
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
-                reader.readAsDataURL(file); // 转base64暂存，无需后端
-            } else {
-                preview.src = ''; preview.style.display = 'none';
+        loginBtn.addEventListener('click', () => {
+            const nickname = nicknameInput.value.trim();
+            currentUser.textContent = nickname;
+            // 隐藏登录界面，显示聊天界面
+            loginScreen.classList.add('opacity-0');
+            setTimeout(() => {
+                loginScreen.classList.add('hidden');
+                chatScreen.classList.remove('hidden');
+                messageInput.focus();
+            }, 500);
+        });
+
+        // 登出功能
+        logoutBtn.addEventListener('click', () => {
+            // 清空输入
+            nicknameInput.value = '';
+            messageInput.value = '';
+            sendBtn.disabled = true;
+            // 隐藏聊天界面，显示登录界面
+            chatScreen.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+            setTimeout(() => {
+                loginScreen.classList.remove('opacity-0');
+                nicknameInput.focus();
+            }, 100);
+        });
+
+        // 发送按钮启用控制
+        messageInput.addEventListener('input', () => {
+            // 输入框有内容或有选中图片时启用发送按钮
+            sendBtn.disabled = messageInput.value.trim() === '' && !imageUpload.files[0];
+        });
+
+        // 图片选择控制
+        imageUpload.addEventListener('change', () => {
+            sendBtn.disabled = messageInput.value.trim() === '' && !imageUpload.files[0];
+        });
+
+        // 发送消息功能
+        function sendMessage(content = '', imageSrc = '') {
+            const nickname = currentUser.textContent;
+            const now = new Date();
+            const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+            // 创建消息元素
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'msg-appear self-end'; // 自己的消息靠右
+
+            // 消息内容容器
+            const msgContent = document.createElement('div');
+            msgContent.className = 'bg-fursuit-primary text-white rounded-2xl rounded-tr-none p-3 max-w-[70%]';
+
+            // 昵称和时间
+            const msgHeader = document.createElement('div');
+            msgHeader.className = 'flex justify-between items-center mb-1';
+            msgHeader.innerHTML = `
+                <span class="font-medium text-sm">${nickname}</span>
+                <span class="text-white/70 text-xs">${timeStr}</span>
+            `;
+
+            // 文字内容（如有）
+            const msgText = document.createElement('div');
+            msgText.className = 'text-sm mb-2';
+            msgText.textContent = content;
+
+            // 图片内容（如有）
+            const msgImage = document.createElement('img');
+            msgImage.className = 'w-full max-w-[200px] rounded-xl object-cover';
+            msgImage.alt = '聊天图片';
+
+            // 组装消息
+            msgContent.appendChild(msgHeader);
+            if (content) msgContent.appendChild(msgText);
+            if (imageSrc) {
+                msgImage.src = imageSrc;
+                msgContent.appendChild(msgImage);
             }
+            messageDiv.appendChild(msgContent);
+
+            // 添加到消息列表并滚动到底部
+            messageContainer.appendChild(messageDiv);
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+
+            // 重置输入
+            messageInput.value = '';
+            imageUpload.value = '';
+            sendBtn.disabled = true;
         }
 
-        // 3. 发布评论（含文字+图片）
-        function addComment() {
-            const content = document.getElementById('commentContent').value.trim();
-            const preview = document.getElementById('imgPreview');
-            const imgSrc = preview.src || '';
+        // 点击发送按钮
+        sendBtn.addEventListener('click', () => {
+            const content = messageInput.value.trim();
+            const file = imageUpload.files[0];
 
-            // 至少有文字或图片才允许发布
-            if (!content && !imgSrc) { alert('请输入评论内容或选择图片~'); return; }
+            if (file) {
+                // 处理图片上传（本地预览，无后端）
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    sendMessage(content, e.target.result);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // 纯文字消息
+                sendMessage(content);
+            }
+        });
 
-            // 构造评论数据（含图片base64地址）
-            const newComment = {
-                username: currentUser,
-                content: content,
-                imgSrc: imgSrc,
-                time: new Date().toLocaleString() // 本地时间格式
-            };
+        // 回车发送消息（Shift+回车换行）
+        messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (!sendBtn.disabled) sendBtn.click();
+            }
+        });
 
-            // 保存数据并更新界面
-            comments.push(newComment);
-            localStorage.setItem('maomaoCommentsWithImg', JSON.stringify(comments));
-            // 清空输入框和预览图
-            document.getElementById('commentContent').value = '';
-            document.getElementById('imgSelect').value = '';
-            preview.src = ''; preview.style.display = 'none';
-            renderComments();
-        }
-
-        // 4. 渲染评论列表（含图片展示）
-        function renderComments() {
-            const list = document.getElementById('commentList');
-            list.innerHTML = '';
-            // 倒序显示（最新评论在顶部）
-            comments.reverse().forEach(comment => {
-                const item = document.createElement('div');
-                item.className = 'comment-item';
-                // 拼接评论HTML（含图片判断：有图则显示，无图则不渲染）
-                item.innerHTML = `
-                    <div class="comment-header">
-                        <span class="comment-name">${comment.username}</span>
-                        <span class="comment-time">${comment.time}</span>
-                    </div>
-                    <div class="comment-content">${comment.content}</div>
-                    ${comment.imgSrc ? `< img class="comment-img" src="${comment.imgSrc}" alt="评论图片">` : ''}
-                `;
-                list.appendChild(item);
-            });
-            comments.reverse(); // 恢复原数组顺序，方便新增
-        }
+        // 初始化聚焦输入框
+        window.addEventListener('load', () => {
+            nicknameInput.focus();
+        });
     </script>
 </body>
 </html>
