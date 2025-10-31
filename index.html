@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GlassTalk - 带邮箱验证的社交平台</title>
+  <title>GlassTalk - 社交平台</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <script>
@@ -70,120 +70,166 @@
   <main class="max-w-7xl mx-auto pt-28 pb-20 px-6 relative z-10">
     <!-- 登录/注册面板 -->
     <div class="flex flex-col lg:flex-row gap-12 items-center">
-      <!-- 右侧表单（重点：邮箱验证功能） -->
-      <div class="lg:w-1/2 w-full max-w-md glass rounded-2xl p-8 liquid-transition">
-        <!-- 注册表单（含完整邮箱验证） -->
-        <div id="registerForm" class="space-y-6">
-          <div class="text-center space-y-2">
-            <h3 class="text-2xl font-bold">创建账号</h3>
-            <p class="text-gray-300">请完成邮箱验证以确保账号安全</p>
-          </div>
-
-          <!-- 1. 用户名输入 -->
-          <div>
-            <label for="regUsername" class="block text-sm font-medium text-gray-300 mb-1">用户名</label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i class="fa fa-user text-gray-400"></i>
-              </div>
-              <input type="text" id="regUsername" class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="设置用户名">
-            </div>
-          </div>
-
-          <!-- 2. 邮箱输入（带格式校验） -->
-          <div>
-            <label for="regEmail" class="block text-sm font-medium text-gray-300 mb-1">电子邮箱 <span class="text-danger">*</span></label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i class="fa fa-envelope text-gray-400"></i>
-              </div>
-              <input type="email" id="regEmail" class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="请输入常用邮箱（如xxx@qq.com）">
-              <!-- 邮箱格式错误提示 -->
-              <div id="emailFormatError" class="hidden absolute -bottom-5 left-0 text-sm text-danger">
-                <i class="fa fa-exclamation-circle mr-1"></i>
-                <span>请输入有效的邮箱格式（如xxx@qq.com）</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 3. 密码输入 -->
-          <div>
-            <label for="regPassword" class="block text-sm font-medium text-gray-300 mb-1">密码 <span class="text-danger">*</span></label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i class="fa fa-lock text-gray-400"></i>
-              </div>
-              <input type="password" id="regPassword" class="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="至少8位，含字母和数字">
-              <button id="toggleRegPwd" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 liquid-transition hover:text-white">
-                <i class="fa fa-eye-slash"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- 4. 验证码输入（带有效性校验） -->
-          <div>
-            <label for="regCode" class="block text-sm font-medium text-gray-300 mb-1">邮箱验证码 <span class="text-danger">*</span></label>
-            <div class="flex space-x-2">
-              <div class="relative flex-1">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <i class="fa fa-key text-gray-400"></i>
-                </div>
-                <input type="text" id="regCode" class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="输入6位验证码">
-                <!-- 验证码错误提示 -->
-                <div id="codeError" class="hidden absolute -bottom-5 left-0 text-sm text-danger">
-                  <i class="fa fa-exclamation-circle mr-1"></i>
-                  <span>验证码错误或已过期，请重新获取</span>
-                </div>
-              </div>
-              <!-- 获取验证码按钮（带倒计时+发送逻辑） -->
-              <button id="sendCodeBtn" class="whitespace-nowrap px-4 py-3 rounded-xl bg-primary/20 text-primary font-medium liquid-transition hover:bg-primary/30 active:scale-98">
-                获取验证码
-              </button>
-            </div>
-            <!-- 验证码发送成功提示 -->
-            <div id="codeSendSuccess" class="hidden mt-2 text-sm text-success">
-              <i class="fa fa-check-circle mr-1"></i>
-              <span>验证码已发送至 <span id="showEmail"></span>，请查收（若在垃圾邮件箱可标记为正常邮件）</span>
-            </div>
-          </div>
-
-          <!-- 5. 注册按钮（需通过邮箱验证才能点击） -->
-          <button id="registerBtn" class="w-full bg-gradient-to-r from-primary to-secondary py-3 rounded-xl font-medium liquid-transition hover:shadow-lg hover:shadow-primary/20 active:scale-98 flex items-center justify-center opacity-50 cursor-not-allowed" disabled>
-            <span>完成注册</span>
-            <i class="fa fa-user-plus ml-2"></i>
-          </button>
-
-          <!-- 切换登录 -->
-          <div class="text-center text-sm text-gray-300">
-            已有账号? <button id="switchToLogin" class="text-primary hover:underline liquid-transition">立即登录</button>
-          </div>
+      <!-- 左侧介绍 -->
+      <div class="lg:w-1/2 space-y-8">
+        <div class="space-y-6">
+          <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight">
+            让交流如<span class="gradient-text">液态玻璃</span>般顺滑
+          </h2>
+          <p class="text-gray-300 text-lg max-w-xl">
+            简洁的社交空间，无需复杂验证，快速注册即可开始分享生活，与好友畅快交流。
+          </p>
         </div>
-
-        <!-- 登录表单（简化，不影响邮箱验证核心） -->
-        <div id="loginForm" class="space-y-6 hidden">
+      </div>
+      
+      <!-- 右侧表单（已移除邮箱验证） -->
+      <div class="lg:w-1/2 w-full max-w-md glass rounded-2xl p-8 liquid-transition">
+        <!-- 登录表单 -->
+        <div id="loginForm" class="space-y-6">
           <div class="text-center space-y-2">
             <h3 class="text-2xl font-bold">欢迎回来</h3>
-            <p class="text-gray-300">登录你的账号</p>
+            <p class="text-gray-300">请登录你的账号</p>
           </div>
-          <div>
-            <label for="loginUsername" class="block text-sm font-medium text-gray-300 mb-1">用户名</label>
-            <input type="text" id="loginUsername" class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="输入用户名">
+          
+          <div class="space-y-5">
+            <div>
+              <label for="loginUsername" class="block text-sm font-medium text-gray-300 mb-1">用户名</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="fa fa-user text-gray-400"></i>
+                </div>
+                <input type="text" id="loginUsername" class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="输入用户名">
+              </div>
+            </div>
+            
+            <div>
+              <label for="loginPassword" class="block text-sm font-medium text-gray-300 mb-1">密码</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="fa fa-lock text-gray-400"></i>
+                </div>
+                <input type="password" id="loginPassword" class="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="输入密码">
+                <button id="toggleLoginPwd" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 liquid-transition hover:text-white">
+                  <i class="fa fa-eye-slash"></i>
+                </button>
+              </div>
+            </div>
+            
+            <button id="loginBtn" class="w-full bg-gradient-to-r from-primary to-secondary py-3 rounded-xl font-medium liquid-transition hover:shadow-lg hover:shadow-primary/20 active:scale-98 flex items-center justify-center">
+              <span>登录</span>
+              <i class="fa fa-arrow-right ml-2"></i>
+            </button>
           </div>
-          <div>
-            <label for="loginPassword" class="block text-sm font-medium text-gray-300 mb-1">密码</label>
-            <input type="password" id="loginPassword" class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="输入密码">
+          
+          <div class="relative my-4">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-slate-700"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+              <span class="px-2 bg-transparent text-gray-400">或者</span>
+            </div>
           </div>
-          <button id="loginBtn" class="w-full bg-gradient-to-r from-primary to-secondary py-3 rounded-xl font-medium liquid-transition hover:shadow-lg hover:shadow-primary/20 active:scale-98">
-            <span>登录</span>
-            <i class="fa fa-arrow-right ml-2"></i>
+          
+          <button id="switchToReg" class="w-full py-3 rounded-xl font-medium border border-slate-700 liquid-transition hover:bg-white/5 active:scale-98">
+            没有账号? 注册
           </button>
-          <div class="text-center text-sm text-gray-300">
-            没有账号? <button id="switchToReg" class="text-primary hover:underline liquid-transition">注册账号</button>
+        </div>
+        
+        <!-- 注册表单（已移除邮箱验证） -->
+        <div id="registerForm" class="space-y-6 hidden">
+          <div class="text-center space-y-2">
+            <h3 class="text-2xl font-bold">创建账号</h3>
+            <p class="text-gray-300">快速注册，开始你的社交之旅</p>
           </div>
+          
+          <div class="space-y-5">
+            <div>
+              <label for="regUsername" class="block text-sm font-medium text-gray-300 mb-1">用户名</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="fa fa-user text-gray-400"></i>
+                </div>
+                <input type="text" id="regUsername" class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="设置用户名">
+              </div>
+            </div>
+            
+            <div>
+              <label for="regPassword" class="block text-sm font-medium text-gray-300 mb-1">密码</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="fa fa-lock text-gray-400"></i>
+                </div>
+                <input type="password" id="regPassword" class="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="至少8位字符">
+                <button id="toggleRegPwd" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 liquid-transition hover:text-white">
+                  <i class="fa fa-eye-slash"></i>
+                </button>
+              </div>
+            </div>
+            
+            <button id="registerBtn" class="w-full bg-gradient-to-r from-primary to-secondary py-3 rounded-xl font-medium liquid-transition hover:shadow-lg hover:shadow-primary/20 active:scale-98 flex items-center justify-center">
+              <span>完成注册</span>
+              <i class="fa fa-user-plus ml-2"></i>
+            </button>
+          </div>
+          
+          <div class="relative my-4">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-slate-700"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+              <span class="px-2 bg-transparent text-gray-400">或者</span>
+            </div>
+          </div>
+          
+          <button id="switchToLogin" class="w-full py-3 rounded-xl font-medium border border-slate-700 liquid-transition hover:bg-white/5 active:scale-98">
+            已有账号? 登录
+          </button>
         </div>
       </div>
     </div>
   </main>
+
+  <!-- 社交主界面 -->
+  <div id="socialInterface" class="fixed inset-0 z-50 hidden fade-in">
+    <!-- 顶部导航 -->
+    <div class="glass h-16 flex items-center justify-between px-6 border-b border-slate-800">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+          <i class="fa fa-comments text-white text-xl"></i>
+        </div>
+        <h1 class="text-xl font-bold gradient-text">Glass<span class="text-white">Talk</span></h1>
+      </div>
+      
+      <div class="flex items-center space-x-6">
+        <div class="relative group">
+          <img src="https://picsum.photos/id/64/100/100" alt="用户头像" class="w-10 h-10 rounded-full border-2 border-primary cursor-pointer liquid-transition hover:scale-110">
+          <div class="absolute right-0 mt-2 w-48 glass rounded-xl p-3 hidden group-hover:block liquid-transition z-10">
+            <div class="flex flex-col space-y-3">
+              <a href="#" class="flex items-center space-x-2 py-1 px-2 liquid-transition hover:bg-white/10 rounded-lg">
+                <i class="fa fa-user w-5 text-center"></i>
+                <span>个人资料</span>
+              </a>
+              <div class="border-t border-slate-700"></div>
+              <a href="#" id="logoutBtn" class="flex items-center space-x-2 py-1 px-2 liquid-transition hover:bg-white/10 rounded-lg text-danger">
+                <i class="fa fa-sign-out w-5 text-center"></i>
+                <span>退出登录</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 主内容区（简化版） -->
+    <div class="flex h-[calc(100%-64px)]">
+      <div class="flex-1 overflow-y-auto p-6">
+        <div class="text-center py-10">
+          <h2 class="text-2xl font-bold mb-4">欢迎使用 GlassTalk</h2>
+          <p class="text-gray-300">你已成功登录，可以开始使用社交功能了</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- 通知提示 -->
   <div id="notification" class="fixed top-20 right-6 glass rounded-xl p-4 max-w-xs transform translate-x-full opacity-0 liquid-transition z-50 flex items-start space-x-3">
@@ -192,7 +238,7 @@
     </div>
     <div>
       <h4 id="notifyTitle" class="font-medium">操作成功</h4>
-      <p id="notifyMessage" class="text-sm text-gray-300 mt-1">注册成功，即将跳转登录页</p>
+      <p id="notifyMessage" class="text-sm text-gray-300 mt-1">注册成功，即将跳转</p>
     </div>
     <button id="closeNotify" class="text-gray-400 hover:text-white liquid-transition">
       <i class="fa fa-times"></i>
@@ -201,67 +247,133 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // 1. 核心变量：存储验证码和邮箱（模拟后端存储）
-      let validCode = ''; // 有效的验证码
-      let targetEmail = ''; // 已发送验证码的邮箱
-      let isCodeValid = false; // 验证码是否有效
-
-      // 2. DOM元素获取
-      const regEmail = document.getElementById('regEmail');
-      const emailFormatError = document.getElementById('emailFormatError');
-      const sendCodeBtn = document.getElementById('sendCodeBtn');
-      const regCode = document.getElementById('regCode');
-      const codeError = document.getElementById('codeError');
-      const codeSendSuccess = document.getElementById('codeSendSuccess');
-      const showEmail = document.getElementById('showEmail');
-      const registerBtn = document.getElementById('registerBtn');
-      const toggleRegPwd = document.getElementById('toggleRegPwd');
-      const regPassword = document.getElementById('regPassword');
-      const switchToLogin = document.getElementById('switchToLogin');
+      // DOM元素
       const switchToReg = document.getElementById('switchToReg');
+      const switchToLogin = document.getElementById('switchToLogin');
       const loginForm = document.getElementById('loginForm');
       const registerForm = document.getElementById('registerForm');
+      const toggleLoginPwd = document.getElementById('toggleLoginPwd');
+      const toggleRegPwd = document.getElementById('toggleRegPwd');
+      const loginPassword = document.getElementById('loginPassword');
+      const regPassword = document.getElementById('regPassword');
+      const loginBtn = document.getElementById('loginBtn');
+      const registerBtn = document.getElementById('registerBtn');
+      const socialInterface = document.getElementById('socialInterface');
+      const logoutBtn = document.getElementById('logoutBtn');
       const notification = document.getElementById('notification');
       const notifyTitle = document.getElementById('notifyTitle');
       const notifyMessage = document.getElementById('notifyMessage');
       const closeNotify = document.getElementById('closeNotify');
 
-      // 3. 密码显示/隐藏切换
+      // 表单切换
+      switchToReg.addEventListener('click', function() {
+        loginForm.classList.add('hidden');
+        registerForm.classList.remove('hidden');
+        registerForm.classList.add('fade-in');
+      });
+
+      switchToLogin.addEventListener('click', function() {
+        registerForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+        loginForm.classList.add('fade-in');
+      });
+
+      // 密码显示切换
+      toggleLoginPwd.addEventListener('click', function() {
+        const type = loginPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+        loginPassword.setAttribute('type', type);
+        toggleLoginPwd.innerHTML = type === 'password' ? '<i class="fa fa-eye-slash"></i>' : '<i class="fa fa-eye"></i>';
+      });
+
       toggleRegPwd.addEventListener('click', function() {
         const type = regPassword.getAttribute('type') === 'password' ? 'text' : 'password';
         regPassword.setAttribute('type', type);
         toggleRegPwd.innerHTML = type === 'password' ? '<i class="fa fa-eye-slash"></i>' : '<i class="fa fa-eye"></i>';
       });
 
-      // 4. 邮箱格式校验（核心：判断是否为有效邮箱）
-      regEmail.addEventListener('input', function() {
-        const email = this.value.trim();
-        const emailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // 邮箱格式正则
+      // 登录功能
+      loginBtn.addEventListener('click', function() {
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
         
-        if (email && !emailReg.test(email)) {
-          emailFormatError.classList.remove('hidden');
-          emailFormatError.classList.add('fade-in');
-          sendCodeBtn.disabled = true;
-          sendCodeBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        } else {
-          emailFormatError.classList.add('hidden');
-          sendCodeBtn.disabled = !email; // 有有效邮箱才允许获取验证码
-          sendCodeBtn.classList.toggle('opacity-50', !email);
-          sendCodeBtn.classList.toggle('cursor-not-allowed', !email);
+        if (!username || !password) {
+          showNotification('错误', '请输入用户名和密码', 'error');
+          return;
         }
+        
+        loginBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+        setTimeout(function() {
+          loginBtn.innerHTML = '<span>登录</span><i class="fa fa-arrow-right ml-2"></i>';
+          document.querySelector('main').classList.add('hidden');
+          socialInterface.classList.remove('hidden');
+          showNotification('欢迎回来', `${username}，很高兴再次见到你`, 'success');
+        }, 1000);
       });
 
-      // 5. 生成随机6位验证码（模拟后端生成）
-      function generateCode() {
-        return Math.floor(100000 + Math.random() * 900000).toString();
+      // 注册功能（已移除邮箱验证）
+      registerBtn.addEventListener('click', function() {
+        const username = document.getElementById('regUsername').value;
+        const password = document.getElementById('regPassword').value;
+        
+        if (!username || !password) {
+          showNotification('错误', '请填写用户名和密码', 'error');
+          return;
+        }
+        
+        if (password.length < 8) {
+          showNotification('错误', '密码长度至少8位', 'error');
+          return;
+        }
+        
+        registerBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+        setTimeout(function() {
+          registerBtn.innerHTML = '<span>完成注册</span><i class="fa fa-user-plus ml-2"></i>';
+          registerForm.classList.add('hidden');
+          loginForm.classList.remove('hidden');
+          document.getElementById('loginUsername').value = username;
+          showNotification('注册成功', '请使用账号密码登录', 'success');
+        }, 1000);
+      });
+
+      // 退出登录
+      logoutBtn.addEventListener('click', function() {
+        socialInterface.classList.add('hidden');
+        document.querySelector('main').classList.remove('hidden');
+        showNotification('已退出', '您已成功退出登录', 'info');
+      });
+
+      // 通知功能
+      function showNotification(title, message, type = 'info') {
+        notifyTitle.textContent = title;
+        notifyMessage.textContent = message;
+        
+        if (type === 'success') {
+          notifyIcon.className = 'w-8 h-8 rounded-full bg-success/20 flex items-center justify-center text-success mt-0.5 flex-shrink-0';
+          notifyIcon.innerHTML = '<i class="fa fa-check"></i>';
+        } else if (type === 'error') {
+          notifyIcon.className = 'w-8 h-8 rounded-full bg-danger/20 flex items-center justify-center text-danger mt-0.5 flex-shrink-0';
+          notifyIcon.innerHTML = '<i class="fa fa-times"></i>';
+        } else {
+          notifyIcon.className = 'w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary mt-0.5 flex-shrink-0';
+          notifyIcon.innerHTML = '<i class="fa fa-info"></i>';
+        }
+        
+        notification.classList.remove('translate-x-full', 'opacity-0');
+        notification.classList.add('translate-x-0', 'opacity-100');
+        
+        const timer = setTimeout(hideNotification, 3000);
+        
+        closeNotify.onclick = function() {
+          clearTimeout(timer);
+          hideNotification();
+        };
       }
 
-      // 6. 发送验证码（核心：模拟真实邮件发送流程）
-      sendCodeBtn.addEventListener('click', function() {
-        const email = regEmail.value.trim();
-        if (!email) return;
-
-        // 生成并存储验证码（模拟后端存储）
-        validCode = generateCode();
-        targetEmail = email;
-        isCodeValid = false;
+      function hideNotification() {
+        notification.classList.remove('translate-x-0', 'opacity-100');
+        notification.classList.add('translate-x-full', 'opacity-0');
+      }
+    });
+  </script>
+</body>
+</html>
