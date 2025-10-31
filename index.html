@@ -1,283 +1,267 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>福瑞交流空间</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script>
-        // Tailwind配置：液态玻璃效果、圆角、颜色
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        fursuit: {
-                            primary: '#8B5CF6', // 主色调：紫蓝色（柔和科技感）
-                            secondary: '#EC4899', // 辅助色：粉色（活泼）
-                            light: '#F3F4F6', // 浅色背景
-                            dark: '#1F2937' // 深色文本
-                        }
-                    },
-                    borderRadius: {
-                        'xl': '1rem',
-                        '2xl': '1.5rem',
-                        '3xl': '2rem' // 超圆润边角
-                    },
-                    backdropBlur: {
-                        'xl': '20px' // 液态玻璃模糊效果
-                    }
-                }
-            }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GlassTalk - 带邮箱验证的社交平台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0071e3',
+            success: '#34d399',
+            danger: '#ef4444',
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
         }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            // 液态玻璃核心样式
-            .glass {
-                background: rgba(255, 255, 255, 0.7);
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
-            }
-            // 输入框/按钮 hover 动画
-            .hover-scale {
-                transition: transform 0.2s ease, box-shadow 0.2s ease;
-            }
-            .hover-scale:hover {
-                transform: scale(1.02);
-                box-shadow: 0 10px 40px rgba(31, 38, 135, 0.15);
-            }
-            // 消息气泡动画
-            .msg-appear {
-                animation: fadeIn 0.3s ease forwards;
-            }
-            @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(10px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-        }
-    </style>
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .glass {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+      }
+      .liquid-transition {
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease forwards;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .gradient-text {
+        background: linear-gradient(90deg, #0071e3, #3a86ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gradient-to-br from-fursuit-primary/10 to-fursuit-secondary/10 min-h-screen font-sans text-fursuit-dark">
-    <!-- 登录界面（默认显示） -->
-    <div id="login-screen" class="fixed inset-0 flex items-center justify-center z-50 transition-all duration-500">
-        <div class="glass w-[90%] max-w-md p-8 rounded-3xl flex flex-col items-center gap-6">
-            <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-fursuit-primary to-fursuit-secondary flex items-center justify-center">
-                <<i class="fa fa-paw text-white text-4xl"></</i>
-            </div>
-            <h1 class="text-2xl font-bold text-center">福瑞交流空间</h1>
-            <p class="text-sm text-gray-600 text-center">输入昵称即可登录，无需密码</p>
-            <input 
-                type="text" 
-                id="nickname-input" 
-                placeholder="请输入你的福瑞昵称" 
-                class="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-fursuit-primary/50 hover-scale"
-                maxlength="12"
-            >
-            <button 
-                id="login-btn" 
-                class="w-full bg-fursuit-primary text-white py-3 rounded-2xl font-medium hover-scale disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
-                disabled
-            >
-                进入交流
-            </button>
+<body class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-800 min-h-screen text-white overflow-x-hidden">
+  <!-- 背景装饰 -->
+  <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-[-300px] left-[-100px] w-[600px] h-[600px] rounded-full bg-primary/20 blur-[150px]"></div>
+  </div>
+
+  <!-- 导航栏 -->
+  <nav class="fixed top-0 left-0 right-0 z-50 liquid-transition py-4 px-6">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+          <i class="fa fa-comments text-white text-xl"></i>
         </div>
+        <h1 class="text-2xl font-bold gradient-text">Glass<span class="text-white">Talk</span></h1>
+      </div>
     </div>
+  </nav>
 
-    <!-- 主聊天界面（默认隐藏） -->
-    <div id="chat-screen" class="hidden w-full max-w-4xl mx-auto p-4 pt-6 h-screen flex flex-col">
-        <!-- 顶部导航 -->
-        <header class="glass rounded-2xl p-4 mb-4 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-fursuit-primary to-fursuit-secondary flex items-center justify-center">
-                    <<i class="fa fa-paw text-white text-lg"></</i>
-                </div>
-                <h2 class="font-bold">福瑞交流空间</h2>
-            </div>
-            <div class="flex items-center gap-2">
-                <span id="current-user" class="text-sm font-medium"></span>
-                <button id="logout-btn" class="text-gray-500 hover:text-fursuit-secondary">
-                    <<i class="fa fa-sign-out"></</i>
-                </button>
-            </div>
-        </header>
+  <!-- 主内容区 -->
+  <main class="max-w-7xl mx-auto pt-28 pb-20 px-6 relative z-10">
+    <!-- 登录/注册面板 -->
+    <div class="flex flex-col lg:flex-row gap-12 items-center">
+      <!-- 右侧表单（重点：邮箱验证功能） -->
+      <div class="lg:w-1/2 w-full max-w-md glass rounded-2xl p-8 liquid-transition">
+        <!-- 注册表单（含完整邮箱验证） -->
+        <div id="registerForm" class="space-y-6">
+          <div class="text-center space-y-2">
+            <h3 class="text-2xl font-bold">创建账号</h3>
+            <p class="text-gray-300">请完成邮箱验证以确保账号安全</p>
+          </div>
 
-        <!-- 消息列表 -->
-        <div id="message-container" class="glass rounded-2xl p-4 flex-1 overflow-y-auto mb-4 gap-4 flex flex-col">
-            <!-- 系统消息（初始） -->
-            <div class="msg-appear self-center">
-                <div class="bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full">
-                    欢迎来到福瑞交流空间，愉快聊天吧~
-                </div>
+          <!-- 1. 用户名输入 -->
+          <div>
+            <label for="regUsername" class="block text-sm font-medium text-gray-300 mb-1">用户名</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fa fa-user text-gray-400"></i>
+              </div>
+              <input type="text" id="regUsername" class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="设置用户名">
             </div>
+          </div>
+
+          <!-- 2. 邮箱输入（带格式校验） -->
+          <div>
+            <label for="regEmail" class="block text-sm font-medium text-gray-300 mb-1">电子邮箱 <span class="text-danger">*</span></label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fa fa-envelope text-gray-400"></i>
+              </div>
+              <input type="email" id="regEmail" class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="请输入常用邮箱（如xxx@qq.com）">
+              <!-- 邮箱格式错误提示 -->
+              <div id="emailFormatError" class="hidden absolute -bottom-5 left-0 text-sm text-danger">
+                <i class="fa fa-exclamation-circle mr-1"></i>
+                <span>请输入有效的邮箱格式（如xxx@qq.com）</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. 密码输入 -->
+          <div>
+            <label for="regPassword" class="block text-sm font-medium text-gray-300 mb-1">密码 <span class="text-danger">*</span></label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fa fa-lock text-gray-400"></i>
+              </div>
+              <input type="password" id="regPassword" class="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="至少8位，含字母和数字">
+              <button id="toggleRegPwd" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 liquid-transition hover:text-white">
+                <i class="fa fa-eye-slash"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4. 验证码输入（带有效性校验） -->
+          <div>
+            <label for="regCode" class="block text-sm font-medium text-gray-300 mb-1">邮箱验证码 <span class="text-danger">*</span></label>
+            <div class="flex space-x-2">
+              <div class="relative flex-1">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="fa fa-key text-gray-400"></i>
+                </div>
+                <input type="text" id="regCode" class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="输入6位验证码">
+                <!-- 验证码错误提示 -->
+                <div id="codeError" class="hidden absolute -bottom-5 left-0 text-sm text-danger">
+                  <i class="fa fa-exclamation-circle mr-1"></i>
+                  <span>验证码错误或已过期，请重新获取</span>
+                </div>
+              </div>
+              <!-- 获取验证码按钮（带倒计时+发送逻辑） -->
+              <button id="sendCodeBtn" class="whitespace-nowrap px-4 py-3 rounded-xl bg-primary/20 text-primary font-medium liquid-transition hover:bg-primary/30 active:scale-98">
+                获取验证码
+              </button>
+            </div>
+            <!-- 验证码发送成功提示 -->
+            <div id="codeSendSuccess" class="hidden mt-2 text-sm text-success">
+              <i class="fa fa-check-circle mr-1"></i>
+              <span>验证码已发送至 <span id="showEmail"></span>，请查收（若在垃圾邮件箱可标记为正常邮件）</span>
+            </div>
+          </div>
+
+          <!-- 5. 注册按钮（需通过邮箱验证才能点击） -->
+          <button id="registerBtn" class="w-full bg-gradient-to-r from-primary to-secondary py-3 rounded-xl font-medium liquid-transition hover:shadow-lg hover:shadow-primary/20 active:scale-98 flex items-center justify-center opacity-50 cursor-not-allowed" disabled>
+            <span>完成注册</span>
+            <i class="fa fa-user-plus ml-2"></i>
+          </button>
+
+          <!-- 切换登录 -->
+          <div class="text-center text-sm text-gray-300">
+            已有账号? <button id="switchToLogin" class="text-primary hover:underline liquid-transition">立即登录</button>
+          </div>
         </div>
 
-        <!-- 输入区域 -->
-        <div class="glass rounded-2xl p-4 flex items-center gap-3">
-            <!-- 图片选择按钮 -->
-            <label for="image-upload" class="text-fursuit-primary hover:text-fursuit-secondary cursor-pointer hover-scale p-2 rounded-full">
-                <<i class="fa fa-image text-lg"></</i>
-                <input id="image-upload" type="file" accept="image/jpeg,image/png,image/gif" class="hidden">
-            </label>
-            
-            <!-- 文字输入框 -->
-            <textarea 
-                id="message-input" 
-                placeholder="输入消息...（支持文字和图片）" 
-                class="flex-1 px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-fursuit-primary/50 resize-none min-h-[50px] max-h-[150px]"
-            ></textarea>
-            
-            <!-- 发送按钮 -->
-            <button 
-                id="send-btn" 
-                class="bg-fursuit-primary text-white p-3 rounded-2xl hover-scale disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                disabled
-            >
-                <<i class="fa fa-paper-plane"></</i>
-            </button>
+        <!-- 登录表单（简化，不影响邮箱验证核心） -->
+        <div id="loginForm" class="space-y-6 hidden">
+          <div class="text-center space-y-2">
+            <h3 class="text-2xl font-bold">欢迎回来</h3>
+            <p class="text-gray-300">登录你的账号</p>
+          </div>
+          <div>
+            <label for="loginUsername" class="block text-sm font-medium text-gray-300 mb-1">用户名</label>
+            <input type="text" id="loginUsername" class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="输入用户名">
+          </div>
+          <div>
+            <label for="loginPassword" class="block text-sm font-medium text-gray-300 mb-1">密码</label>
+            <input type="password" id="loginPassword" class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none liquid-transition" placeholder="输入密码">
+          </div>
+          <button id="loginBtn" class="w-full bg-gradient-to-r from-primary to-secondary py-3 rounded-xl font-medium liquid-transition hover:shadow-lg hover:shadow-primary/20 active:scale-98">
+            <span>登录</span>
+            <i class="fa fa-arrow-right ml-2"></i>
+          </button>
+          <div class="text-center text-sm text-gray-300">
+            没有账号? <button id="switchToReg" class="text-primary hover:underline liquid-transition">注册账号</button>
+          </div>
         </div>
+      </div>
     </div>
+  </main>
 
-    <script>
-        // DOM元素获取
-        const loginScreen = document.getElementById('login-screen');
-        const chatScreen = document.getElementById('chat-screen');
-        const nicknameInput = document.getElementById('nickname-input');
-        const loginBtn = document.getElementById('login-btn');
-        const currentUser = document.getElementById('current-user');
-        const logoutBtn = document.getElementById('logout-btn');
-        const messageContainer = document.getElementById('message-container');
-        const messageInput = document.getElementById('message-input');
-        const sendBtn = document.getElementById('send-btn');
-        const imageUpload = document.getElementById('image-upload');
+  <!-- 通知提示 -->
+  <div id="notification" class="fixed top-20 right-6 glass rounded-xl p-4 max-w-xs transform translate-x-full opacity-0 liquid-transition z-50 flex items-start space-x-3">
+    <div id="notifyIcon" class="w-8 h-8 rounded-full bg-success/20 flex items-center justify-center text-success mt-0.5 flex-shrink-0">
+      <i class="fa fa-check"></i>
+    </div>
+    <div>
+      <h4 id="notifyTitle" class="font-medium">操作成功</h4>
+      <p id="notifyMessage" class="text-sm text-gray-300 mt-1">注册成功，即将跳转登录页</p>
+    </div>
+    <button id="closeNotify" class="text-gray-400 hover:text-white liquid-transition">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
 
-        // 登录功能
-        nicknameInput.addEventListener('input', () => {
-            // 昵称不为空则启用登录按钮
-            loginBtn.disabled = nicknameInput.value.trim() === '';
-        });
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 1. 核心变量：存储验证码和邮箱（模拟后端存储）
+      let validCode = ''; // 有效的验证码
+      let targetEmail = ''; // 已发送验证码的邮箱
+      let isCodeValid = false; // 验证码是否有效
 
-        loginBtn.addEventListener('click', () => {
-            const nickname = nicknameInput.value.trim();
-            currentUser.textContent = nickname;
-            // 隐藏登录界面，显示聊天界面
-            loginScreen.classList.add('opacity-0');
-            setTimeout(() => {
-                loginScreen.classList.add('hidden');
-                chatScreen.classList.remove('hidden');
-                messageInput.focus();
-            }, 500);
-        });
+      // 2. DOM元素获取
+      const regEmail = document.getElementById('regEmail');
+      const emailFormatError = document.getElementById('emailFormatError');
+      const sendCodeBtn = document.getElementById('sendCodeBtn');
+      const regCode = document.getElementById('regCode');
+      const codeError = document.getElementById('codeError');
+      const codeSendSuccess = document.getElementById('codeSendSuccess');
+      const showEmail = document.getElementById('showEmail');
+      const registerBtn = document.getElementById('registerBtn');
+      const toggleRegPwd = document.getElementById('toggleRegPwd');
+      const regPassword = document.getElementById('regPassword');
+      const switchToLogin = document.getElementById('switchToLogin');
+      const switchToReg = document.getElementById('switchToReg');
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const notification = document.getElementById('notification');
+      const notifyTitle = document.getElementById('notifyTitle');
+      const notifyMessage = document.getElementById('notifyMessage');
+      const closeNotify = document.getElementById('closeNotify');
 
-        // 登出功能
-        logoutBtn.addEventListener('click', () => {
-            // 清空输入
-            nicknameInput.value = '';
-            messageInput.value = '';
-            sendBtn.disabled = true;
-            // 隐藏聊天界面，显示登录界面
-            chatScreen.classList.add('hidden');
-            loginScreen.classList.remove('hidden');
-            setTimeout(() => {
-                loginScreen.classList.remove('opacity-0');
-                nicknameInput.focus();
-            }, 100);
-        });
+      // 3. 密码显示/隐藏切换
+      toggleRegPwd.addEventListener('click', function() {
+        const type = regPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+        regPassword.setAttribute('type', type);
+        toggleRegPwd.innerHTML = type === 'password' ? '<i class="fa fa-eye-slash"></i>' : '<i class="fa fa-eye"></i>';
+      });
 
-        // 发送按钮启用控制
-        messageInput.addEventListener('input', () => {
-            // 输入框有内容或有选中图片时启用发送按钮
-            sendBtn.disabled = messageInput.value.trim() === '' && !imageUpload.files[0];
-        });
-
-        // 图片选择控制
-        imageUpload.addEventListener('change', () => {
-            sendBtn.disabled = messageInput.value.trim() === '' && !imageUpload.files[0];
-        });
-
-        // 发送消息功能
-        function sendMessage(content = '', imageSrc = '') {
-            const nickname = currentUser.textContent;
-            const now = new Date();
-            const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-
-            // 创建消息元素
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'msg-appear self-end'; // 自己的消息靠右
-
-            // 消息内容容器
-            const msgContent = document.createElement('div');
-            msgContent.className = 'bg-fursuit-primary text-white rounded-2xl rounded-tr-none p-3 max-w-[70%]';
-
-            // 昵称和时间
-            const msgHeader = document.createElement('div');
-            msgHeader.className = 'flex justify-between items-center mb-1';
-            msgHeader.innerHTML = `
-                <span class="font-medium text-sm">${nickname}</span>
-                <span class="text-white/70 text-xs">${timeStr}</span>
-            `;
-
-            // 文字内容（如有）
-            const msgText = document.createElement('div');
-            msgText.className = 'text-sm mb-2';
-            msgText.textContent = content;
-
-            // 图片内容（如有）
-            const msgImage = document.createElement('img');
-            msgImage.className = 'w-full max-w-[200px] rounded-xl object-cover';
-            msgImage.alt = '聊天图片';
-
-            // 组装消息
-            msgContent.appendChild(msgHeader);
-            if (content) msgContent.appendChild(msgText);
-            if (imageSrc) {
-                msgImage.src = imageSrc;
-                msgContent.appendChild(msgImage);
-            }
-            messageDiv.appendChild(msgContent);
-
-            // 添加到消息列表并滚动到底部
-            messageContainer.appendChild(messageDiv);
-            messageContainer.scrollTop = messageContainer.scrollHeight;
-
-            // 重置输入
-            messageInput.value = '';
-            imageUpload.value = '';
-            sendBtn.disabled = true;
+      // 4. 邮箱格式校验（核心：判断是否为有效邮箱）
+      regEmail.addEventListener('input', function() {
+        const email = this.value.trim();
+        const emailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // 邮箱格式正则
+        
+        if (email && !emailReg.test(email)) {
+          emailFormatError.classList.remove('hidden');
+          emailFormatError.classList.add('fade-in');
+          sendCodeBtn.disabled = true;
+          sendCodeBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        } else {
+          emailFormatError.classList.add('hidden');
+          sendCodeBtn.disabled = !email; // 有有效邮箱才允许获取验证码
+          sendCodeBtn.classList.toggle('opacity-50', !email);
+          sendCodeBtn.classList.toggle('cursor-not-allowed', !email);
         }
+      });
 
-        // 点击发送按钮
-        sendBtn.addEventListener('click', () => {
-            const content = messageInput.value.trim();
-            const file = imageUpload.files[0];
+      // 5. 生成随机6位验证码（模拟后端生成）
+      function generateCode() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+      }
 
-            if (file) {
-                // 处理图片上传（本地预览，无后端）
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    sendMessage(content, e.target.result);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                // 纯文字消息
-                sendMessage(content);
-            }
-        });
+      // 6. 发送验证码（核心：模拟真实邮件发送流程）
+      sendCodeBtn.addEventListener('click', function() {
+        const email = regEmail.value.trim();
+        if (!email) return;
 
-        // 回车发送消息（Shift+回车换行）
-        messageInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                if (!sendBtn.disabled) sendBtn.click();
-            }
-        });
-
-        // 初始化聚焦输入框
-        window.addEventListener('load', () => {
-            nicknameInput.focus();
-        });
-    </script>
-</body>
-</html>
+        // 生成并存储验证码（模拟后端存储）
+        validCode = generateCode();
+        targetEmail = email;
+        isCodeValid = false;
